@@ -25,12 +25,12 @@ class Manager < Employee
   def bonus(mult)
     bonuses = subordinates.map do |subordinate|
       if subordinate.is_a?(Manager)
-        subordinate.bonus(1) + subordinate.salary
+        subordinate.bonus(mult) + subordinate.salary * mult
       else
-        subordinate.salary
+        subordinate.bonus(mult)
       end
     end
-    bonuses.reduce(:+) * mult
+    bonuses.reduce(:+)
   end
 
   def add_employee(emp)
