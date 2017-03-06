@@ -26,6 +26,15 @@ class Board
     self[end_pos] = piece
   end
 
+  def in_bounds?(pos)
+    x, y = pos
+    x.between?(0, BOARD_SIZE - 1) && y.between?(0, BOARD_SIZE - 1)
+  end
+
+  def rows
+    @grid
+  end
+
   private
   attr_accessor :grid
   BOARD_SIZE = 8
