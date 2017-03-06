@@ -8,8 +8,12 @@ class Board
 
   def populate!
     STARTING_ROWS.each do |row|
-      (0...BOARD_SIZE).each { |col| self[[row, col]] = Piece.new }
+      (0...BOARD_SIZE).each { |col| self[[row, col]] = Piece.new([row,col], self, "blue", :P) }
     end
+    NON_STARTING_ROWS.each do |row|
+      (0...BOARD_SIZE).each { |col| self[[row, col]] = NullPiece.instance }
+    end
+    nil
   end
 
   def move_piece(start_pos, end_pos)
@@ -35,11 +39,6 @@ class Board
     @grid
   end
 
-  private
-  attr_accessor :grid
-  BOARD_SIZE = 8
-  STARTING_ROWS = [0, 1, 6, 7]
-
   def [](pos)
     x, y = pos
     grid[x][y]
@@ -50,6 +49,11 @@ class Board
     grid[x][y] = value
   end
 
+  private
+  attr_accessor :grid
+  BOARD_SIZE = 8
+  STARTING_ROWS = [0, 1, 6, 7]
+  NON_STARTING_ROWS = [2, 3, 4, 5]
 end
 
 class NoPieceError < StandardError
