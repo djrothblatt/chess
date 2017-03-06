@@ -1,4 +1,3 @@
-require 'byebug'
 class Employee
   attr_reader :name, :title, :salary, :boss
 
@@ -37,15 +36,4 @@ class Manager < Employee
   def add_employee(emp)
     @subordinates << emp unless @subordinates.include?(emp)
   end
-end
-
-if __FILE__ == $PROGRAM_NAME
-  ned = Manager.new('Ned', 'Founder', 1_000_000)
-  darren = Manager.new('Darren', 'TA Manager', 78_000, ned)
-  david = Employee.new('David', 'TA', 10_000, darren)
-  shawna = Employee.new('Shawna', 'TA', 12_000, darren)
-  # debugger
-  puts ned.bonus(5)
-  puts darren.bonus(4)
-  puts david.bonus(3)
 end
