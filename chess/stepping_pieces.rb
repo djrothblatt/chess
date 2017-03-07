@@ -1,5 +1,4 @@
 require_relative 'board'
-require_relative 'piece'
 
 module SteppingPiece
   def moves
@@ -14,29 +13,5 @@ module SteppingPiece
   def nudge(pos, dx, dy)
     x, y = pos
     [x + dx, y + dy]
-  end
-end
-
-class Knight < Piece
-  include SteppingPiece
-
-  def initialize(pos, board, color)
-    super(pos, board, color, :H)
-  end
-
-  def move_dirs
-    knight_directions
-  end
-end
-
-class King < Piece
-  include SteppingPiece
-
-  def initialize(pos, board, color)
-    super(pos, board, color, :K)
-  end
-
-  def move_dirs
-    straights + diagonals
   end
 end

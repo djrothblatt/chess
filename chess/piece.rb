@@ -1,4 +1,6 @@
 require 'singleton'
+require_relative 'stepping_pieces'
+require_relative 'sliding_pieces'
 
 class Piece
   attr_reader :pos, :board, :color, :symbol
@@ -14,7 +16,8 @@ class Piece
   end
 
   def valid_move?(pos)
-    board.in_bounds?(pos) && board[pos].is_a?(NullPiece)
+    board.in_bounds?(pos) &&
+    (board[pos].is_a?(NullPiece) || board[pos].color != color)
   end
 
   def straights
@@ -58,6 +61,67 @@ class NullPiece < Piece
   attr_reader :color, :symbol
 
   def initialize
-    super(nil, nil, "orange", :X)
+    super(nil, nil, :white, :_)
+  end
+end
+
+class Knight < Piece
+  include SteppingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :H)
+  end
+
+  def move_dirs
+    knight_directions
+  end
+end
+
+class King < Piece
+  include SteppingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :K)
+  end
+
+  def move_dirs
+    straights + diagonals
+  end
+end
+
+class Bishop < Piece
+  include SlidingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :B)
+  end
+
+  def move_dirs
+    diagonals
+  end
+end
+
+
+class Rook < Piece
+  include SlidingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :R)
+  end
+
+  def move_dirs
+    straights
+  end
+end
+
+class Queen < Piece
+  include SlidingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :Q)
+  end
+
+  def move_dirs
+    straights + diagonals
   end
 end
