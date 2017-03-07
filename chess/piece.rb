@@ -1,6 +1,7 @@
 require 'singleton'
 require_relative 'stepping_pieces'
 require_relative 'sliding_pieces'
+require 'byebug'
 
 class Piece
   attr_reader :pos, :board, :color, :symbol
@@ -51,7 +52,11 @@ class Piece
     knight_down_left: [2, -1],
     knight_down_right: [2, 1],
     knight_right_up: [-1, 2],
-    knight_right_down: [1, 2]
+    knight_right_down: [1, 2],
+
+    # for pawns
+    up_two: [-2, 0],
+    down_two: [2, 0]
     }
   end
 end
@@ -61,7 +66,36 @@ class NullPiece < Piece
   attr_reader :color, :symbol
 
   def initialize
-    super(nil, nil, :white, :_)
+    super(nil, nil, :none, :_)
+  end
+end
+
+class Pawn < Piece
+  include SteppingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :P)
+  end
+
+  def move_dirs
+    out = []
+    if color == :white
+      out << :up
+      forward_left = nudge(pos, -1, -1)
+      forward_right = nudge(pos, -1, 1)
+      out << :up_left if board[forward_left].color == :black
+      out << :up_right if board[forward_right].color == :black
+      out << :up_two if pos[0] == 6
+    else
+      out << :down
+      forward_left = nudge(pos, 1, -1)
+      forward_right = nudge(pos, 1, 1)
+      out << :down_left if board[forward_left].color == :white
+      out << :down_right if board[forward_right].color == :white
+      out << :down_two if pos[0] == 1
+    end
+
+    out
   end
 end
 
