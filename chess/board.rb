@@ -1,7 +1,8 @@
 require_relative 'piece'
 
 class Board
-  attr_reader :grid
+  attr_reader :grid, :white_king, :black_king
+  attr_accessor :black_team, :white_team
 
   BOARD_SIZE = 8
   def initialize
@@ -70,8 +71,6 @@ class Board
   end
 
   private
-  attr_reader :white_king, :black_king
-  attr_accessor :black_team, :white_team
 
   def place_kings
     @black_king = King.new([0, 4], self, :black)
@@ -146,7 +145,7 @@ class Board
 
   def place_row(row, color)
     @grid[row].each_index do |col|
-      pawn = Piece.new([row, col], self, color, :P)
+      pawn = Pawn.new([row, col], self, color)
       self[[row, col]] = pawn
       if color == :white
         self.white_team += [pawn]
