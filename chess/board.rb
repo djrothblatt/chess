@@ -2,7 +2,7 @@ require_relative 'piece'
 
 class Board
   def initialize
-    @grid = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE) }
+    @grid = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE, NullPiece.instance) }
     populate!
   end
 
@@ -10,9 +10,7 @@ class Board
     STARTING_ROWS.each do |row|
       (0...BOARD_SIZE).each { |col| self[[row, col]] = Piece.new([row,col], self, "blue", :P) }
     end
-    NON_STARTING_ROWS.each do |row|
-      (0...BOARD_SIZE).each { |col| self[[row, col]] = NullPiece.instance }
-    end
+
     nil
   end
 
@@ -53,16 +51,10 @@ class Board
   attr_accessor :grid
   BOARD_SIZE = 8
   STARTING_ROWS = [0, 1, 6, 7]
-  NON_STARTING_ROWS = [2, 3, 4, 5]
 end
 
 class NoPieceError < StandardError
 end
 
 class InvalidMoveError < StandardError
-end
-
-if __FILE__ == $PROGRAM_NAME
-  board = Board.new
-  board.move_piece
 end
