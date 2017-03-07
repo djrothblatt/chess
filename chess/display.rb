@@ -11,28 +11,36 @@ class Display
 
   def render
     board.rows.each_with_index do |row, i|
-      colored_row = row.map.with_index do |square, j|
-        if cursor.cursor_pos == [i, j]
-          " ".on_red
-        else
-          " ".on_white
-        end
+      colored_row = row.map.with_index do |piece, j|
+        colorized = color_piece(piece)
+        color_background(colorized, i, j)
       end
       puts colored_row.join('')
     end
   end
 
-  def test_render
-    loop do
-      render
-      cursor.get_input
+  def color_piece(piece)
+    color = piece.color
+    symbol = piece.symbol
+    symbol = " " if symbol == :_
+    if color == :white
+      symbol.to_s.yellow
+    else
+      symbol.to_s.red
     end
   end
-end
 
-if __FILE__ == $PROGRAM_NAME
-  require_relative 'board'
-  board = Board.new
-  disp = Display.new(board)
-  disp.test_render
+  def color_background(colorized, i, j)
+    if cursor.cursor_pos == [i, j]
+      colorized.on_green
+    elsif same_parity?(i, j)
+      colorized.on_white
+    else
+      colorized.on_black
+    end
+  end
+
+  def same_parity?(num1, num2)
+    (num1 % 2) == (num2 % 2)
+  end
 end
