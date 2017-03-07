@@ -1,7 +1,6 @@
 require 'singleton'
 require_relative 'stepping_pieces'
 require_relative 'sliding_pieces'
-require 'byebug'
 
 class Piece
   attr_reader :pos, :board, :color, :symbol
