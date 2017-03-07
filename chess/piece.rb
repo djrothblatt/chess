@@ -20,6 +20,17 @@ class Piece
     (board[pos].is_a?(NullPiece) || board[pos].color != color)
   end
 
+  def valid_moves
+    moves.reject { |move| move_into_check?(move) }
+  end
+
+  def move_into_check?(end_pos)
+    dupped = board.deep_dup
+    start_pos = pos
+    dupped.move_piece(start_pos, end_pos)
+    board.in_check?(color)
+  end
+
   def straights
     [:left, :right, :up, :down]
   end
