@@ -5,11 +5,12 @@ class Board
   attr_accessor :black_team, :white_team
 
   BOARD_SIZE = 8
-  def initialize
+  def initialize(arr = nil)
     @grid = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE, NullPiece.instance) }
     @white_team = []
     @black_team = []
-    populate!
+    populate! unless arr
+    @grid = arr if arr
   end
 
   def populate!
@@ -23,16 +24,16 @@ class Board
   end
 
   def move_piece(start_pos, end_pos)
-    unless self[start_pos]
+    if self[start_pos].is == NullPiece.instance
       raise NoPieceError
     end
     piece = self[start_pos]
-    unless piece.can_move?(end_pos)
+    unless piece.valid_moves.include?(end_pos)
       raise InvalidMoveError
     end
 
     piece.move(end_pos)
-    self[start_pos] = nil
+    self[start_pos] = NullPiece.instance
     self[end_pos] = piece
   end
 
@@ -53,6 +54,16 @@ class Board
   def []=(pos, value)
     x, y = pos
     grid[x][y] = value
+  end
+
+  def dup
+    arr = rows.map do |row|
+      row.map do |piece|
+        (piece == NullPiece.instance) ? piece : piece.dup
+      end
+    end
+
+    Board.new(arr)
   end
 
   def in_check?(color)
